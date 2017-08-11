@@ -1,0 +1,126 @@
+<!doctype html>
+<!--声明文档类型是HTML-->
+<html lang="en">
+    <head>
+        <!--声明当前页面的编码集GBK,gb2312(中文编码)，UTF-8(国际编码)-->
+        <meta charset="UTF-8">
+        
+        <!--声明当前页面三要素-->
+        <meta name="Keywords" content="关键字,关键字">
+        <meta name="Description" content="">
+        <title>demo</title>
+        <!--css样式 层叠样式表 化妆品 服饰
+            css就是打扮我们网页内容的（让网页变得漂亮），网页设计师
+            一定是写在head标签里面的<style></style>里面
+        -->
+        <style type="text/css">
+            body {
+                background:#333;
+            }
+            * {
+                margin:0;
+                padding:0;
+            }
+            #iphone {
+                width:900px;
+                height:600px;
+                margin:100px auto;/*上下 左右*/;
+                position:relative; 
+                background: #ccc;
+            }
+            #wrap {
+                width:534px;
+                height:300px;
+                overflow:hidden;/*超出隐藏*/
+                position:absolute;
+                left:183px;
+                top:121px;
+            }
+            #ul {
+                width:2136px;
+                height:300px;
+                cursor:pointer;
+                position:absolute;
+                left:0px;
+                top:0;
+            }
+            #ul li {
+                width:534px;
+                height:300px;
+                list-style:none;
+                float:left;/*浮动-左看齐*/
+            }
+        </style>
+
+        <script>
+            window.onload = function(){
+                var oUl = document.getElementById("ul");
+                var oLi = oUl.getElementsByTagName("li");
+                var disX = 0;
+                var downX = 0;
+                var iNow = 0;
+                var timer = null;
+                var iSpeed =0;
+                //console.log(oUl.offsetLeft); //0 因为父元素#wrap有定位
+                oUl.onmousedown = function(ev){
+                    var ev = ev || window.event;
+                    disX = ev.clientX-oUl.offsetLeft;
+                    downX = ev.clientX;
+                    clearInterval(timer);
+                    document.onmousemove = function(ev){
+                        var ev = ev || window.event;
+                        oUl.style.left = ev.clientX-disX+"px";
+                    }
+                    document.onmouseup = function(ev){
+                        document.onmousemove = document.onmouseup =null;
+                        var ev = ev || window.event;
+                        if(ev.clientX<downX){
+                            //alert("←")
+                            if(iNow != oLi.length-1){
+                                iNow++;//iNow=iNow+1
+                            }
+                            startMove(-iNow*oLi[0].offsetWidth);
+                        }else{
+                            //alert("→")
+                            if(iNow !=0){
+                                iNow--;
+                            }
+                            startMove(-iNow*oLi[0].offsetWidth);
+                        }               
+                    }
+                    return false;
+                }
+                function startMove(iTarget){
+                    clearInterval(timer);
+                    timer = setInterval(function(){
+                        iSpeed +=(iTarget-oUl.offsetLeft)/6;
+                        iSpeed *=0.75;
+                        
+                        if(Math.abs(iSpeed)<=1 && Math.abs(iTarget-oUl.offsetLeft)<=1){
+                            clearInterval(timer);
+                            iSpeed = 0;
+                            oUl.style.left = iTarget+'px';
+                        }else{
+                            oUl.style.left = oUl.offsetLeft+iSpeed+"px";    
+                        }
+
+                    },30);
+                }
+            }
+        </script>
+    </head>
+
+    <!--网页代码的身体部分-->
+    <body>
+        <div id="iphone"><!--结构父级-->
+            <div id="wrap">
+                <ul id="ul">
+                    <li style="background:url(img/01.jpg)"></li>
+                    <li style="background:url(img/02.jpg)"></li>
+                    <li style="background:url(img/03.jpg)"></li>
+                    <li style="background:url(img/04.jpg)"></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
